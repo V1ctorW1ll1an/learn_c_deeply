@@ -1,62 +1,12 @@
-// Alunos: Victor Willian de Sousa e Fabr�cio de Paulo Rodrigues.
-// Turma: CCO-4.
 
 #include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-// colors
-#define RED "\033[0;31m"
-#define GREEN "\033[0;32m"
-#define PURPLE "\033[0;35m"
-#define YELLOW "\033[0;33m"
-#define DEFAULT "\033[0m"
-#define TAM 100
-
-struct Curso {
-    char nome[40];
-};
-
-struct Turma {
-    char sigla[5];
-    int anoInicio;
-    struct Curso curso;
-};
-
-struct Aluno {
-    char nome[40];
-    struct Turma turma;
-};
-
-void pause(char msg[]) {
-#ifdef WIN32
-    printf("\n\n%s\n\n", msg);
-    system("pause");
-#else
-    printf("\n\n%s\n\n", msg);
-    cleanBuffer();
-    printf("Pressione enter para continuar!!");
-    int c = getchar();
-    cleanOutput();
-#endif
-}
-
-void cleanBuffer() {
-#ifdef WIN32
-    fflush(stdin);
-#else
-    __fpurge(stdin);
-#endif
-}
-
-void cleanOutput() {
-#ifdef WIN32
-    system("cls");
-#else
-    system("clear");
-#endif
-}
+#include "libs/consts.h"
+#include "libs/structs.h"
+#include "libs/utils.h"
 
 // w -> x -> y
 void readStudent(struct Aluno **aluno) {
