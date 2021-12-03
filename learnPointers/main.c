@@ -8,7 +8,6 @@
 #include "libs/structs.h"
 #include "libs/utils.h"
 
-// w -> x -> y
 void readStudent(struct Aluno **aluno) {
     struct Aluno *typeAluno = *aluno;
     printf("endereço do aluno no readStudent: %x", aluno);
