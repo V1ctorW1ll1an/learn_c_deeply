@@ -3,5 +3,8 @@
 
 void searchStudent(char studentName[]);
 void showStudents();
+void readStudent(struct Aluno **aluno);
+void insertStudent(void *parameters[]);
+char *getStudentName();
 
 #endif

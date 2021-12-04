@@ -44,3 +44,54 @@ void searchStudent(char studentName[]) {
 
     free(aluno);
 }
+
+void readStudent(struct Aluno **aluno) {
+    struct Aluno *typeAluno = *aluno;
+    printf(PURPLE);
+    printf("\n\n ########## BEM VINDO A TELA DE INSERÇÃO DE ALUNO ########## \n\n");
+
+    printf("\nInsira os dados corretamente para fazer o cadastro de um novo aluno!\n");
+
+    printf("\n\n Aluno \n\n");
+    printf(DEFAULT);
+
+    cleanBuffer();
+    printf("nome do aluno (max. 40 caracteres): ");
+    fgets(typeAluno->nome, 40, stdin);
+    cleanBuffer();
+
+    printf("sigla da turma (max. 5 caracteres): ");
+    fgets((*aluno)->turma.sigla, 5, stdin);
+    cleanBuffer();
+
+    printf("ano de início: ");
+    while (scanf("%d", &((*aluno)->turma.anoInicio)) == 0) {
+        printf(YELLOW);
+        printf("\nATENÇÃO: O valor inserido é inválido, por favor, preencha o formulário corretamente!\n\n");
+        printf(DEFAULT);
+        printf("ano de início: ");
+        cleanBuffer();
+    }
+    cleanBuffer();
+
+    printf("nome do curso (max. 40 caracteres): ");
+    fgets((*aluno)->turma.curso.nome, 40, stdin);
+    cleanBuffer();
+}
+
+void insertStudent(void *parameters[]) {
+    FILE *file = parameters[0];
+    struct Aluno *student = parameters[1];
+
+    fwrite(student, sizeof(struct Aluno), 1, file);
+}
+
+char *getStudentName() {
+    char *studentName = malloc(40);
+    cleanBuffer();
+    printf("nome do aluno para pesquisar (max. 40 caracteres): ");
+    fgets(studentName, 40, stdin);
+    cleanBuffer();
+
+    return studentName;
+}
