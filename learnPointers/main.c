@@ -5,13 +5,14 @@
 #include <string.h>
 
 #include "libs/consts.h"
+#include "libs/files.h"
 #include "libs/structs.h"
+#include "libs/students.h"
 #include "libs/utils.h"
 
 void readStudent(struct Aluno **aluno) {
     struct Aluno *typeAluno = *aluno;
-    printf("endereço do aluno no readStudent: %x", aluno);
-    // cleanOutput();
+    cleanOutput();
     printf(PURPLE);
     printf("\n\n ########## BEM VINDO A TELA DE INSERÇÃO DE ALUNO ########## \n\n");
 
@@ -56,6 +57,13 @@ void appendInFile(struct Aluno *aluno) {
     }
 }
 
+void insertStudent(void *parameters[]) {
+    FILE *file = parameters[0];
+    struct Aluno *student = parameters[1];
+
+    fwrite(student, sizeof(struct Aluno), 1, file);
+}
+
 char *getStudentName() {
     char *studentName = malloc(40);
     cleanBuffer();
@@ -64,41 +72,6 @@ char *getStudentName() {
     cleanBuffer();
 
     return studentName;
-}
-
-void searchStudent(char studentName[40]) {
-    struct Aluno *aluno = malloc(sizeof(struct Aluno));
-    int i = 0;
-    int studentExists = 0;
-
-    // abrir arquivo
-    FILE *file = fopen("alunos", "rb");
-
-    if (file != NULL) {
-        for (i = 0; i < TAM; i++) {
-            fread(aluno, sizeof(struct Aluno), 1, file);
-            if (strcmp(studentName, aluno->nome) == 0) {
-                studentExists = 1;
-                break;
-            }
-        }
-    } else {
-        printf("Erro ao ler o arquivo");
-        exit(1);
-    }
-
-    // fechar o arquivo
-    fclose(file);
-
-    if (studentExists) {
-        printf("\n\n Dados do aluno: \n\n");
-        printf("Nome: %s\n", aluno->nome);
-        printf("Sigla: %s\n", aluno->turma.sigla);
-        printf("Ano de Início: %d\n", aluno->turma.anoInicio);
-        printf("Nome do curso: %s\n", aluno->turma.curso.nome);
-    } else {
-        printf("O aluno buscado não existe!\n");
-    }
 }
 
 void menu() {
@@ -112,9 +85,10 @@ void menu() {
         printf("\n############################# Menu ##############################");
         printf("\n# \t\t\t\t\t\t\t\t#");
         printf("\n# \t\t\t\t\t\t\t\t#");
+        printf("\n# \t\t 0 - Sair \t\t\t\t\t#");
         printf("\n# \t\t 1 - Cadastrar Aluno \t\t\t\t#");
         printf("\n# \t\t 2 - Pesquisar Aluno \t\t\t\t#");
-        printf("\n# \t\t 3 - Sair \t\t\t\t\t#");
+        printf("\n# \t\t 3 - callback function \t\t\t#");
         printf("\n# \t\t\t\t\t\t\t\t#");
         printf("\n# \t\t\t\t\t\t\t\t#");
         printf("\n#################################################################");
@@ -131,12 +105,17 @@ void menu() {
             cleanOutput();
         } else {
             switch (opcao) {
+                case 0:
+                    free(aluno);
+                    free(studentName);
+                    cleanOutput();
+                    printf(GREEN);
+                    printf("\n\nPrograma encerrado com sucesso!\n\n");
+                    printf(DEFAULT);
+                    break;
                 case 1:
-                    printf("endereço do aluno no menu: %x\n", &aluno);
                     (*readStudentVar)(&aluno);  // &x -> y
-                    printf("%s\n", aluno->nome);
-                    printf("%s\n", aluno->turma.sigla);
-                    // appendInFile(aluno);
+                    openFile("alunos", "w", &insertStudent, aluno);
                     pause("");
                     cleanOutput();
                     break;
@@ -148,10 +127,9 @@ void menu() {
                     cleanOutput();
                     break;
                 case 3:
+                    openFile("alunos", "w", &insertStudent, aluno);
+                    pause("");
                     cleanOutput();
-                    printf(GREEN);
-                    printf("\n\nPrograma encerrado com sucesso!\n\n");
-                    printf(DEFAULT);
                     break;
                 default:
                     cleanOutput();
